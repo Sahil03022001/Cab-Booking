@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class Cab {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
@@ -42,7 +42,7 @@ public class Cab {
         this.perKmRate = perKmRate;
     }
 
-    public boolean getAvailable() {
+    public boolean isAvailable() {
         return available;
     }
 

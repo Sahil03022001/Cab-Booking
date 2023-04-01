@@ -19,54 +19,41 @@ public class AdminController {
 	AdminService adminService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Void> registerAdmin(@RequestBody Admin admin){
+	public ResponseEntity<String> registerAdmin(@RequestBody Admin admin){
 		adminService.adminRegister(admin);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Admin Registered",HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Admin> updateAdminPassword(@RequestParam Integer adminId, @RequestParam String password){
+	public ResponseEntity<String> updateAdminPassword(@RequestParam Integer adminId, @RequestParam String password){
 		Admin updatedAdmin;
 		try{
 			updatedAdmin = adminService.updatePassword(adminId, password);
 		}
 		catch (Exception e){
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>("Admin not found", HttpStatus.OK);
 		}
-		return new ResponseEntity<>(updatedAdmin, HttpStatus.OK);
+		return new ResponseEntity<>("Password Updated", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete")
-	public void deleteAdmin(@RequestParam Integer adminId){
+	public ResponseEntity<String> deleteAdmin(@RequestParam Integer adminId){
 		try{
 			adminService.deleteAdmin(adminId);
 		}
 		catch (Exception e){
-			return;
+			return new ResponseEntity<>("Admin not found", HttpStatus.OK);
 		}
+		return new ResponseEntity<>("Admin deleted", HttpStatus.OK);
 	}
 
 	@GetMapping("/listOfCustomers")
 	public List<Customer> listOfCustomers() {
-		List<Customer> listOfCustomers;
-		try{
-			listOfCustomers = adminService.getListOfCustomers();
-		}
-		catch (Exception e){
-			return null;
-		}
-		return listOfCustomers;
+		return adminService.getListOfCustomers();
 	}
 
 	@GetMapping("/listOfDrivers")
 	public List<Driver> listOfDrivers() {
-		List<Driver> listOfDrivers;
-		try{
-			listOfDrivers = adminService.getListOfDrivers();
-		}
-		catch (Exception e){
-			return null;
-		}
-		return listOfDrivers;
+		return adminService.getListOfDrivers();
 	}
 }

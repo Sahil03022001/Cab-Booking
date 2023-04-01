@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer = customerRepository2.findById(customerId).get();
 		}
 		catch (Exception e){
-			throw new RuntimeException();
+			throw new RuntimeException("Customer not found");
 		}
 
 		customerRepository2.delete(customer);
@@ -53,12 +53,12 @@ public class CustomerServiceImpl implements CustomerService {
 			customer = customerRepository2.findById(customerId).get();
 		}
 		catch (Exception e){
-			throw new RuntimeException(e);
+			throw new RuntimeException("Customer not found");
 		}
 
 		List<Driver> driverList = driverRepository2.findAll();
 		for(Driver driver : driverList){
-			if(driver.getCab().getAvailable()){
+			if(driver.getCab().isAvailable()){
 				TripBooking tripBooking = new TripBooking();
 				tripBooking.setFromLocation(fromLocation);
 				tripBooking.setToLocation(toLocation);
@@ -84,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		}
 
-		throw new RuntimeException("No cab available!");
+		throw new Exception("No cab available!");
 	}
 
 	@Override
@@ -95,12 +95,17 @@ public class CustomerServiceImpl implements CustomerService {
 			tripBooking = tripBookingRepository2.findById(tripId).get();
 		}
 		catch (Exception e){
-			throw new RuntimeException(e);
+			throw new RuntimeException("Invalid booking ID");
 		}
 
-		if(!tripBooking.getStatus().equals(TripStatus.CONFIRMED)){
-			throw new RuntimeException();
+		if(tripBooking.getStatus().equals(TripStatus.CANCELED)){
+			throw new RuntimeException("Trip is already Canceled");
 		}
+
+		if(tripBooking.getStatus().equals(TripStatus.COMPLETED)){
+			throw new RuntimeException("Trip is Completed. Cannot Cancel");
+		}
+
 		tripBooking.setStatus(TripStatus.CANCELED);
 		tripBookingRepository2.save(tripBooking);
 	}
@@ -113,12 +118,17 @@ public class CustomerServiceImpl implements CustomerService {
 			tripBooking = tripBookingRepository2.findById(tripId).get();
 		}
 		catch (Exception e){
-			throw new RuntimeException(e);
+			throw new RuntimeException("Invalid Booking ID");
 		}
 
-		if(!tripBooking.getStatus().equals(TripStatus.CONFIRMED)){
-			throw new RuntimeException();
+		if(tripBooking.getStatus().equals(TripStatus.CANCELED)){
+			throw new RuntimeException("Trip is Canceled. Cannot complete.");
 		}
+
+		if(tripBooking.getStatus().equals(TripStatus.COMPLETED)){
+			throw new RuntimeException("Trip is already Completed.");
+		}
+
 		tripBooking.setStatus(TripStatus.COMPLETED);
 		tripBookingRepository2.save(tripBooking);
 	}

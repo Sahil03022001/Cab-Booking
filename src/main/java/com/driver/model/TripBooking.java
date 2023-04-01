@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Entity
 public class TripBooking {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int tripBookingId;
 

@@ -15,28 +15,30 @@ public class DriverController {
 	DriverService driverService;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<Void> registerDriver(@RequestParam String mobile, @RequestParam String password){
+	public ResponseEntity<String> registerDriver(@RequestParam String mobile, @RequestParam String password){
 		driverService.register(mobile, password);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Driver registered", HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/delete")
-	public void deleteDriver(@RequestParam Integer driverId){
+	public ResponseEntity<String> deleteDriver(@RequestParam Integer driverId){
 		try{
 			driverService.removeDriver(driverId);
 		}
 		catch (Exception e){
-			return;
+			return new ResponseEntity<>("Driver not found", HttpStatus.OK);
 		}
+		return new ResponseEntity<>("Driver deleted", HttpStatus.OK);
 	}
 
 	@PutMapping("/status")
-	public void updateStatus(@RequestParam Integer driverId){
+	public ResponseEntity<String> updateStatus(@RequestParam Integer driverId){
 		try{
 			driverService.updateStatus(driverId);
 		}
 		catch (Exception e){
-			return;
+			return new ResponseEntity<>("Driver not found", HttpStatus.OK);
 		}
+		return new ResponseEntity<>("Driver's cab status updated", HttpStatus.OK);
 	}
 }
